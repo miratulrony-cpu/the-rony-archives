@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Rony Archives — ইতিহাস, রহস্য ও প্রত্নতত্ত্ব</title>
+<meta name="description" content="The Rony Archives — ইতিহাস, প্রত্নতাত্ত্বিক নিদর্শন, হারিয়ে যাওয়া সভ্যতা ও বৈজ্ঞানিক রহস্যের ডিজিটাল আর্কাইভ।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--ink:#f4f2ef;--dim:#8c8783;--line:rgba(244,242,239,.28);--pad:clamp(14px,2.6vw,34px);--ease:cubic-bezier(.22,.61,.36,1);--hw:min(56vw,640px);--persp:1150px;--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);--tap:44px;--serif:"Playfair Display","Times New Roman",serif;--sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}html{background:#000;scrollbar-gutter:stable;scroll-behavior:auto}body{margin:0;background:#000;color:var(--ink);font-family:var(--sans);font-weight:300;overflow-x:hidden;min-height:100vh;min-height:100dvh;overscroll-behavior-y:none;-webkit-font-smoothing:antialiased}body.locked{overflow:hidden;height:100vh;height:100dvh}img{display:block;max-width:100%}button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}a{-webkit-tap-highlight-color:transparent;color:inherit}button:focus-visible,a:focus-visible{outline:1px solid #fff;outline-offset:4px}
+#scrolltrack{height:116vh;pointer-events:none;position:absolute;inset:0 auto auto 0;width:1px}
+#stage{position:fixed;inset:0;z-index:10;perspective:var(--persp);perspective-origin:50% 50%;overflow:hidden;touch-action:none;transition:opacity .6s,filter .6s}
+#world{position:absolute;top:50%;left:50%;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+#orb{position:absolute;top:0;left:0;width:0;height:0;transform-style:preserve-3d;opacity:1;transform:none}
+#headline{position:absolute;top:0;left:0;width:var(--hw);margin-left:calc(var(--hw)/-2);text-align:center;font-family:var(--serif);font-weight:400;font-size:clamp(25px,3.7vw,55px);line-height:1.06;letter-spacing:-.005em;color:#fff;text-shadow:0 2px 34px rgba(0,0,0,.55);pointer-events:none;user-select:none;-webkit-user-select:none;white-space:normal}
+#headline .inner{position:absolute;top:0;left:0;width:100%;transform:translateY(-50%)}
+#headline .inner span{display:inline-block;opacity:0;transform:translateY(.42em);filter:blur(7px);transition:opacity 1.05s,transform 1.15s,filter 1.05s;transition-delay:calc(.9s + var(--i)*.085s)}
+body.revealed #headline .inner span{opacity:1;transform:none;filter:blur(0)}
+.card{position:absolute;top:0;left:0;transform-style:preserve-3d;cursor:pointer;will-change:transform}
+.card figure{position:relative;width:var(--cw);height:calc(var(--cw)/1.5);margin:calc(var(--cw)/-3) 0 0 calc(var(--cw)/-2);overflow:hidden;border-radius:3px;background:#0a0a0a;transition:scale .5s ease}
+.card.tall figure{height:calc(var(--cw)*1.25);margin-top:calc(var(--cw)*-.625)}
+.card figure::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,var(--d,0));box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);border-radius:3px;pointer-events:none}
+.card:hover figure{scale:1.045}
+.card img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s ease-out}
+.card img.in{opacity:1}
+body.gridview #stage{opacity:0;filter:blur(14px);pointer-events:none}
+.vig{position:fixed;inset:0;z-index:12;pointer-events:none;background:radial-gradient(ellipse 88% 92% at 50% 50%,transparent 48%,rgba(0,0,0,.26) 80%,rgba(0,0,0,.72) 100%);transition:opacity .6s}
+body.gridview .vig,body.lit .vig{opacity:0}
+.chrome{opacity:0;transition:opacity 1.2s .15s}
+body.revealed .chrome{opacity:1}
+header.chrome{position:fixed;top:0;left:0;width:100%;z-index:60;display:flex;justify-content:space-between;align-items:flex-start;padding:calc(var(--pad)*.8 + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(var(--pad)*.35) calc(var(--pad) + var(--safe-left));mix-blend-mode:difference}
+.wordmark{font-family:var(--serif);font-size:clamp(19px,2.1vw,27px);letter-spacing:.005em;line-height:1;color:#fff;text-decoration:none;white-space:nowrap}
+.wordmark em,.mark em{font-style:normal}
+.menu-btn{display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:44px;min-height:44px;padding:8px 0 4px}
+.menu-label{font-size:clamp(12px,1.25vw,15px);letter-spacing:.01em;color:#fff;transition:opacity .35s}
+.bars{position:relative;display:block;width:clamp(42px,4.4vw,62px);height:clamp(16px,2vw,22px)}
+.bars i{position:absolute;top:50%;left:0;right:0;height:1px;background:#fff;transition:transform .4s,width .4s,background .4s}
+.bars i:first-child{transform:translateY(-5px)}
+.bars i:last-child{width:clamp(34px,3.6vw,50px);left:auto;transform:translateY(5px)}
+.menu-btn:hover .bars i:last-child{transform:translate(-8px,5px)}
+body.menuopen header.chrome{z-index:90;mix-blend-mode:normal}
+body.menuopen .wordmark{color:var(--ink)}
+body.menuopen .menu-label{opacity:0}
+body.menuopen .bars i{width:100%;background:var(--ink)}
+body.menuopen .bars i:first-child{transform:rotate(45deg)}
+body.menuopen .bars i:last-child{transform:rotate(-45deg)}
+.bio{position:fixed;left:calc(var(--pad) + var(--safe-left));bottom:calc(var(--pad) + var(--safe-bottom));z-index:55;max-width:min(320px,46vw);transition:opacity .5s,transform .5s;pointer-events:auto}
+.who{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+#avatar{width:52px;height:52px;border-radius:3px;object-fit:cover;filter:grayscale(.15)}
+.who b{font-family:var(--serif);font-weight:400;font-size:19px;letter-spacing:.01em}
+.bio p{font-size:12.5px;line-height:1.62;color:rgba(244,242,239,.72);margin:0}
+body.deep .bio,body.gridview .bio,body.lit .bio{opacity:0;transform:translateY(10px);pointer-events:none}
+.colophon{position:fixed;right:calc(var(--pad) + var(--safe-right));bottom:calc(var(--pad) + var(--safe-bottom));z-index:55;font-size:12.5px;color:rgba(244,242,239,.72)}
+.gridbtn{position:fixed;left:calc(var(--pad) + var(--safe-left));bottom:calc(var(--pad) + var(--safe-bottom));z-index:56;width:44px;height:44px;padding:5px;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);gap:4px;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .4s,transform .4s}
+body.deep .gridbtn,body.gridview .gridbtn{opacity:1;transform:none;pointer-events:auto}
+.gridbtn b{background:var(--ink);border-radius:2px;transition:transform .3s,background .3s}
+.gridbtn:hover b{background:#fff;transform:scale(.86)}
+body.gridview .gridbtn b:first-child{transform:translate(3px,3px)}body.gridview .gridbtn b:last-child{transform:translate(-3px,-3px)}
+.cue{position:fixed;left:50%;bottom:calc(var(--pad) + var(--safe-bottom) + 4px);transform:translateX(-50%);z-index:54;display:flex;align-items:center;gap:10px;font-size:10px;text-transform:uppercase;letter-spacing:.24em;color:rgba(244,242,239,.42);white-space:nowrap}
+.cue s{width:44px;height:1px;background:rgba(244,242,239,.28);overflow:hidden;position:relative;text-decoration:none}
+.cue s::after{content:"";position:absolute;inset:0;background:var(--ink);transform:translateX(-100%);animation:sweep 2.6s ease infinite}
+@keyframes sweep{55%{transform:translateX(0)}100%{transform:translateX(100%)}}
+body.deep .cue,body.gridview .cue,body.lit .cue{opacity:0;pointer-events:none}
+#grid{position:fixed;inset:0;z-index:20;overflow:auto;padding:calc(var(--pad)*3.4 + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(var(--pad)*4 + var(--safe-bottom)) calc(var(--pad) + var(--safe-left));background:#000;opacity:0;pointer-events:none;transition:opacity .6s}
+body.gridview #grid{opacity:1;pointer-events:auto}
+.rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:clamp(10px,1.4vw,20px);max-width:1680px;margin:0 auto}
+.rows figure{position:relative;aspect-ratio:3/2;margin:0;border-radius:3px;background:#0b0b0b;overflow:hidden;cursor:pointer}
+.rows img{width:100%;height:100%;object-fit:cover;opacity:.82;transition:transform .8s,opacity .8s}
+.rows figure:hover img{transform:scale(1.05);opacity:1}
+.rows figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.82));font-family:var(--serif);font-size:15px;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.rows figure:hover figcaption{opacity:1;transform:none}
+#lit{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:clamp(56px,8vh,84px) var(--pad);opacity:0;pointer-events:none;transition:opacity .42s}
+body.lit #lit{opacity:1;pointer-events:auto}
+.scrim{position:absolute;inset:0}
+.plate{position:relative;width:min(72vw,860px,(100vh - 230px)*1.5);z-index:1;transition:transform .62s ease,opacity .42s ease}
+.shot{position:relative;width:100%;aspect-ratio:3/2;border-radius:2px;background:#0b0b0b;box-shadow:0 30px 90px rgba(0,0,0,.75);overflow:hidden}
+.shot img{width:100%;height:100%;object-fit:cover;border-radius:2px}
+.close{position:absolute;top:12px;right:14px;font-size:12.5px;min-width:44px;min-height:44px;padding:10px 14px;border:1px solid rgba(244,242,239,.78);border-radius:6px;background:rgba(0,0,0,.35);color:var(--ink);z-index:2}
+.close:hover{border-color:#fff;background:rgba(0,0,0,.55)}
+.meta{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:clamp(22px,3.2vw,48px);padding-top:16px}
+#litTitle{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.15vw,32px);line-height:1.08;letter-spacing:-.01em;margin:0 0 6px}
+.where{font-size:13px;color:rgba(244,242,239,.62)}
+.note{font-size:13.5px;line-height:1.55;color:rgba(244,242,239,.92)}
+#menu{position:fixed;inset:0;z-index:80;background:#050505;display:grid;place-items:center;clip-path:inset(0 0 100% 0);transition:clip-path .85s ease;pointer-events:none}
+body.menuopen #menu{clip-path:inset(0);pointer-events:auto}
+#menu nav{display:flex;flex-direction:column;gap:clamp(4px,1vw,10px);text-align:center}
+#menu nav a{font-family:var(--serif);font-size:clamp(34px,7.6vw,78px);line-height:1.08;color:var(--ink);text-decoration:none;opacity:.55;transition:opacity .3s,letter-spacing .3s}
+#menu nav a:hover{opacity:1;letter-spacing:.012em}
+.addr{position:absolute;left:calc(var(--pad) + var(--safe-left));right:calc(var(--pad) + var(--safe-right));bottom:calc(var(--pad) + var(--safe-bottom));font-size:12.5px;color:var(--dim);line-height:1.7}
+#intro{position:fixed;inset:0;z-index:200;background:#000;display:grid;place-items:center;overflow:hidden;opacity:1;transition:opacity .5s linear}
+#intro.gone{opacity:0;pointer-events:none}
+#film{width:100%;height:100%;object-fit:cover}
+.veil{position:absolute;inset:0;background:#000;opacity:0;transition:opacity 1.15s ease;pointer-events:none}
+#intro.closing .veil{opacity:1}
+.fallback{position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,#14301a 0%,#060c07 42%,#000 72%);opacity:0;pointer-events:none}
+#intro.novideo .fallback{opacity:1}
+.skip{position:absolute;right:calc(var(--pad) + var(--safe-right));bottom:calc(var(--pad) + var(--safe-bottom));font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,242,239,.6);min-height:44px;padding:10px 18px;border:1px solid rgba(244,242,239,.25);border-radius:999px;backdrop-filter:blur(6px);transition:opacity .2s,color .2s,border-color .2s}
+.skip:hover{color:#fff;border-color:rgba(255,255,255,.7)}#intro.closing .skip{opacity:0;pointer-events:none}
+#splash{position:fixed;inset:0;z-index:250;background:#000;display:grid;place-items:center;align-content:center;gap:26px;opacity:1;transition:opacity .6s}
+#splash.out{opacity:0;pointer-events:none}
+.mark{font-family:var(--serif);font-size:clamp(28px,4.4vw,52px);letter-spacing:.005em;color:var(--ink);opacity:0;animation:riseIn 1.25s ease .15s forwards}
+.bar{width:clamp(120px,17vw,210px);height:1px;background:rgba(244,242,239,.16)}
+#bar{display:block;width:100%;height:100%;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .55s ease}
+.tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:rgba(244,242,239,.38);opacity:0;animation:riseIn .9s ease .7s forwards}
+@keyframes riseIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+#dot{position:fixed;z-index:300;top:0;left:0;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;border-radius:50%;background:rgba(214,212,209,.9);mix-blend-mode:difference;border:1px solid transparent;pointer-events:none;opacity:0;transform:translate3d(-100px,-100px,0);transition:width .35s, height .35s, margin .35s,background .35s,border .35s}
+#dot.wide{width:52px;height:52px;margin:-26px 0 0 -26px;background:rgba(244,242,239,.14);border-color:rgba(244,242,239,.75)}
+
+.admin-open{position:fixed;right:calc(var(--pad) + var(--safe-right));top:50%;transform:translateY(-50%);z-index:70;border:1px solid rgba(244,242,239,.35);border-radius:999px;padding:11px 15px;background:rgba(0,0,0,.62);backdrop-filter:blur(12px);font-size:11px;letter-spacing:.04em;color:var(--ink);opacity:.75;transition:opacity .25s,border-color .25s}
+.admin-open:hover{opacity:1;border-color:var(--ink)}
+.admin-panel{position:fixed;z-index:400;inset:0 0 0 auto;width:min(480px,100vw);height:100dvh;overflow:auto;background:#0a0a0a;border-left:1px solid rgba(244,242,239,.15);padding:calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(28px + var(--safe-bottom));transform:translateX(102%);transition:transform .45s var(--ease);color:var(--ink);font-family:var(--sans);pointer-events:none}
+.admin-panel.open{transform:none;pointer-events:auto}
+.admin-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}.admin-kicker{font-size:9px;letter-spacing:.22em;color:var(--dim)}.admin-head h2{font:400 27px var(--serif);margin:8px 0 0}.admin-close{font-size:30px;line-height:1;width:44px;height:44px}.admin-warning{font-size:12px;line-height:1.6;color:#c6b7a3;border:1px solid rgba(198,183,163,.28);padding:12px;border-radius:5px;margin:18px 0}
+.admin-panel label{display:block;font-size:12px;color:#d4d0cb;margin:14px 0}.admin-panel input,.admin-panel textarea{display:block;width:100%;margin-top:7px;border:1px solid rgba(244,242,239,.22);border-radius:4px;background:#111;color:var(--ink);padding:11px;font:300 13px var(--sans);outline:none}.admin-panel input:focus,.admin-panel textarea:focus{border-color:#f4f2ef}.admin-panel input[type=file]{font-size:11px}.admin-panel h3{font:400 18px var(--serif);margin:14px 0}.admin-divider{height:1px;background:rgba(244,242,239,.15);margin:22px 0}.admin-primary,.admin-secondary{min-height:44px;padding:11px 14px;border-radius:4px;font-size:12px}.admin-primary{background:#f4f2ef;color:#080808}.admin-secondary{border:1px solid rgba(244,242,239,.35)}.admin-list{display:grid;gap:8px}.admin-item{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px;border:1px solid rgba(244,242,239,.13);border-radius:4px}.admin-item img{width:58px;height:44px;object-fit:cover;border-radius:2px;background:#161616}.admin-item strong{display:block;font:400 13px var(--serif);overflow-wrap:anywhere}.admin-item small{display:block;color:var(--dim);font-size:10px;margin-top:4px}.admin-item button{font-size:11px;border:1px solid rgba(244,242,239,.25);border-radius:3px;padding:7px}.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.admin-status{font-size:12px;color:#b8d6b8;min-height:18px}.admin-list-empty{font-size:12px;color:var(--dim)}
+body.adminopen{overflow:hidden}
+@media(max-width:640px){.admin-open{top:auto;bottom:calc(70px + var(--safe-bottom));right:var(--pad);font-size:10px;padding:9px 12px}.admin-panel{padding-left:16px;padding-right:16px}.admin-head h2{font-size:24px}}
+@media(pointer:fine) and (hover:hover){body{cursor:none}a,button,.card,.rows figure{cursor:none}#dot{opacity:1}}
+@media(hover:none),(pointer:coarse){#dot{display:none}#stage{touch-action:pan-y}}
+@media(max-width:900px){.bio{max-width:min(420px,calc(100vw - var(--pad)*2 - var(--safe-left) - var(--safe-right)))}.bio p{font-size:12px}.colophon{font-size:11px}.meta{grid-template-columns:1fr;gap:10px;padding-top:14px}.plate{width:min(92vw,(100dvh - 220px)*1.5)}.rows{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}#grid{padding-top:calc(var(--pad)*2.8 + var(--safe-top))}}
+@media(max-width:768px){.colophon{display:none} .bio{max-width:calc(100vw - var(--pad)*2 - var(--safe-left) - var(--safe-right))}#headline{font-size:clamp(22px,6.4vw,34px)}#menu nav a{font-size:clamp(28px,9vw,54px)}.addr{font-size:11.5px}}
+@media(max-width:640px){:root{--hw:min(84vw,360px);--pad:clamp(12px,4vw,18px)}.who{gap:12px}#avatar{width:42px;height:42px}.who b{font-size:17px}.bio p{font-size:11.5px;line-height:1.55}.cue{display:none}#lit{display:block;overflow:auto;padding:calc(52px + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(var(--pad) + var(--safe-bottom)) calc(var(--pad) + var(--safe-left))}.plate{width:100%;max-width:560px;margin:0 auto}.meta{gap:10px;padding-top:14px}#litTitle{font-size:clamp(20px,5.6vw,26px)}.note{font-size:12.5px;line-height:1.58}.close{top:8px;right:8px}.rows{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rows figcaption{font-size:13px;opacity:1;transform:none}#grid{padding:calc(var(--pad) + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(var(--pad)*2 + var(--safe-bottom)) calc(var(--pad) + var(--safe-left))}}
+@media(max-width:380px){:root{--hw:min(88vw,320px)}.who{gap:10px;margin-bottom:10px}.bio p{display:none}.rows{grid-template-columns:1fr}#menu nav{gap:2px}#menu nav a{font-size:clamp(24px,10vw,40px)}}
+@media(max-height:520px) and (orientation:landscape){.bio,.colophon,.cue{display:none}#headline{font-size:clamp(18px,4.8vh,28px)}#lit{padding-top:calc(36px + var(--safe-top))}.meta{padding-top:10px}.plate{width:min(58vw,(100dvh - 80px)*1.5)}header.chrome{padding-top:calc(8px + var(--safe-top))}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.14s!important;scroll-behavior:auto!important}}
+
+/* Editorial archive + immersive dashboard */
+:root{--gold:#c6a66b;--paper:#e9e2d6;--panel:#10100f;--muted:#aaa39a}
+.editorial-open,.dashboard-open{overflow:hidden!important}
+.editorial-launch,.dashboard-launch{position:fixed;z-index:69;top:50%;padding:11px 15px;border:1px solid rgba(244,242,239,.28);border-radius:999px;background:rgba(8,8,8,.76);backdrop-filter:blur(12px);font-size:11px;letter-spacing:.04em;color:var(--ink);opacity:.8;transition:opacity .25s,border-color .25s,transform .25s}
+.editorial-launch{left:calc(var(--pad) + var(--safe-left));transform:translateY(-50%)}
+.dashboard-launch{right:calc(var(--pad) + var(--safe-right));transform:translateY(-50%)}
+.editorial-launch:hover,.dashboard-launch:hover{opacity:1;border-color:var(--gold)}
+#editorial,#dashboard,#articleReader{position:fixed;inset:0;z-index:120;background:#080807;color:var(--paper);overflow:auto;opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .45s,transform .45s}
+body.editorial-open #editorial,body.dashboard-open #dashboard,body.reader-open #articleReader{opacity:1;pointer-events:auto;transform:none}
+body.editorial-open #stage,body.dashboard-open #stage,body.reader-open #stage{opacity:0;pointer-events:none}
+body.editorial-open .vig,body.dashboard-open .vig,body.reader-open .vig{opacity:0}
+.archive-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:calc(17px + var(--safe-top)) calc(var(--pad) + var(--safe-right)) 17px calc(var(--pad) + var(--safe-left));background:rgba(8,8,7,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(233,226,214,.12)}
+.archive-brand{font:400 19px var(--serif);letter-spacing:.01em}.archive-brand span{color:var(--gold)}
+.archive-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.archive-actions button,.archive-actions a,.archive-back{border:1px solid rgba(233,226,214,.25);border-radius:999px;padding:9px 13px;font-size:11px;text-decoration:none;color:var(--paper)}
+.archive-actions button:hover,.archive-actions a:hover,.archive-back:hover{border-color:var(--gold)}
+.editorial-wrap,.dashboard-wrap{max-width:1440px;margin:0 auto;padding:clamp(28px,5vw,72px) var(--pad) 80px}
+.editorial-hero{position:relative;min-height:clamp(320px,45vw,540px);display:flex;align-items:flex-end;overflow:hidden;padding:clamp(24px,5vw,64px);border:1px solid rgba(233,226,214,.13);background:radial-gradient(ellipse at 76% 20%,rgba(161,112,55,.28),transparent 34%),radial-gradient(ellipse at 28% 62%,rgba(63,75,60,.38),transparent 38%),linear-gradient(125deg,#151613,#090a09 65%,#17120c)}
+.editorial-hero:before{content:"ARCHIVE / FIELD RESEARCH";position:absolute;right:5%;top:10%;writing-mode:vertical-rl;font-size:10px;letter-spacing:.28em;color:rgba(233,226,214,.34)}
+.editorial-hero:after{content:"";position:absolute;width:clamp(150px,28vw,350px);aspect-ratio:1;border:1px solid rgba(198,166,107,.3);border-radius:50%;right:12%;top:12%;box-shadow:0 0 0 24px rgba(198,166,107,.025),0 0 0 54px rgba(198,166,107,.025),inset 0 0 60px rgba(198,166,107,.07)}
+.editorial-hero-content{position:relative;z-index:1;max-width:760px}
+.eyebrow{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.editorial-hero h1,.dashboard-hero h1{font:400 clamp(38px,7vw,88px)/.98 var(--serif);letter-spacing:-.035em;margin:18px 0}
+.editorial-hero h1 em{font-weight:400;color:#cbb995}
+.editorial-hero p{max-width:590px;color:#c0b9af;line-height:1.8;font-size:14px}
+.editorial-tools{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:34px 0 20px}
+.editorial-tools h2{font:400 clamp(25px,3vw,38px) var(--serif);margin:0}
+.article-search{width:min(100%,340px);background:#111;border:1px solid rgba(233,226,214,.2);border-radius:999px;color:var(--paper);padding:13px 17px;font:300 12px var(--sans)}
+.category-tabs{display:flex;gap:8px;overflow:auto;padding:3px 0 16px}
+.category-tabs button{white-space:nowrap;border:1px solid rgba(233,226,214,.18);border-radius:999px;padding:9px 13px;font-size:11px;color:#c6beb2}
+.category-tabs button.active{background:var(--paper);color:#111;border-color:var(--paper)}
+.article-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.article-card{position:relative;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;text-align:left;border:1px solid rgba(233,226,214,.12);background:#11110f;padding:clamp(20px,3vw,34px);isolation:isolate}
+.article-card:before{content:"";position:absolute;inset:0;z-index:-2;background:var(--artbg,linear-gradient(130deg,#302719,#0d0e0d 65%));transition:transform .8s}
+.article-card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(0,0,0,.94),rgba(0,0,0,.12) 85%)}
+.article-card:hover:before{transform:scale(1.06)}
+.article-card .article-number{position:absolute;top:22px;left:22px;font:400 12px var(--serif);color:var(--gold);letter-spacing:.1em}
+.article-card .article-tag{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.article-card h3{font:400 clamp(24px,3.2vw,39px)/1.08 var(--serif);margin:12px 0}
+.article-card p{font-size:12px;line-height:1.7;color:#c7c0b6;max-width:540px;margin:0 0 20px}
+.article-card .read-link{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#eee0c6}
+.article-card:nth-child(4n+2){--artbg:radial-gradient(ellipse at 70% 15%,#5b5039,transparent 35%),linear-gradient(135deg,#18201d,#090a09 68%)}
+.article-card:nth-child(4n+3){--artbg:radial-gradient(ellipse at 75% 25%,#433d32,transparent 30%),linear-gradient(145deg,#201a14,#090a09 70%)}
+.article-card:nth-child(4n+4){--artbg:radial-gradient(ellipse at 22% 25%,#334037,transparent 35%),linear-gradient(135deg,#161b18,#080908 70%)}
+.article-card:first-child{grid-column:span 2;min-height:390px}
+.archive-footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(233,226,214,.14);padding-top:22px;margin-top:60px;color:#8f887f;font-size:11px;line-height:1.7}
+.dashboard-wrap{max-width:1500px}
+.dashboard-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:34px}
+.dashboard-hero h1{font-size:clamp(38px,6vw,72px);margin-bottom:12px}
+.dashboard-hero p{max-width:650px;color:#aaa39a;line-height:1.75;font-size:13px}
+.live-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(198,166,107,.35);border-radius:999px;padding:9px 12px;color:#d9c49f;font-size:10px;letter-spacing:.12em}
+.live-chip:before{content:"";width:6px;height:6px;background:#b8c99a;border-radius:50%;box-shadow:0 0 12px #b8c99a}
+.dash-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:28px 0}
+.dash-stat{padding:22px;border:1px solid rgba(233,226,214,.13);background:linear-gradient(145deg,#151512,#0b0b0a);min-height:135px}
+.dash-stat span{font-size:10px;letter-spacing:.12em;color:#a59d91;text-transform:uppercase}
+.dash-stat strong{display:block;font:400 clamp(30px,4vw,48px) var(--serif);margin:14px 0 5px;color:#f2e8d8}
+.dash-stat small{font-size:10px;color:#898176}
+.dash-columns{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.8fr);gap:14px}
+.dash-panel{border:1px solid rgba(233,226,214,.13);background:#0d0d0c;padding:clamp(18px,3vw,30px);min-width:0}
+.dash-panel h2{font:400 25px var(--serif);margin:0 0 20px}
+.dash-panel p{font-size:12px;color:#aaa39a;line-height:1.75}
+.dash-article-row{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:12px;align-items:center;border-top:1px solid rgba(233,226,214,.1);padding:14px 0}
+.dash-article-row .idx{font:400 13px var(--serif);color:var(--gold)}
+.dash-article-row strong{display:block;font:400 16px var(--serif);margin-bottom:5px}
+.dash-article-row small{font-size:10px;color:#8f887f}
+.dash-article-row button{font-size:10px;color:#e8d6b3;border:1px solid rgba(198,166,107,.28);border-radius:999px;padding:8px 10px}
+.dash-progress{height:5px;background:#292722;border-radius:99px;overflow:hidden;margin:14px 0 8px}.dash-progress span{display:block;height:100%;width:68%;background:linear-gradient(90deg,#85704a,#d9c49f)}
+.dash-shortcuts{display:grid;gap:9px;margin-top:20px}
+.dash-shortcuts button,.dash-shortcuts a{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;padding:13px;border:1px solid rgba(233,226,214,.13);text-decoration:none;font-size:12px;color:#e7dfd3}
+.dash-shortcuts button:hover,.dash-shortcuts a:hover{border-color:var(--gold)}
+#articleReader{z-index:160;background:#090908}
+.reader-wrap{max-width:900px;margin:0 auto;padding:clamp(30px,6vw,78px) var(--pad) 100px}
+.reader-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:50px}
+.reader-title{font:400 clamp(36px,7vw,76px)/1.02 var(--serif);letter-spacing:-.03em;margin:22px 0}
+.reader-deck{font-size:16px;line-height:1.8;color:#bfb5a7;max-width:740px}
+.reader-meta{display:flex;gap:15px;flex-wrap:wrap;color:var(--gold);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:24px 0 36px}
+.reader-cover{height:clamp(180px,35vw,390px);border:1px solid rgba(198,166,107,.24);background:radial-gradient(ellipse at 70% 25%,rgba(198,166,107,.25),transparent 30%),linear-gradient(130deg,#27251d,#0d0e0c 65%);margin-bottom:42px;position:relative;overflow:hidden}
+.reader-cover:before{content:"FIELD DOSSIER";position:absolute;bottom:18px;left:20px;font-size:10px;letter-spacing:.28em;color:rgba(233,226,214,.55)}
+.reader-body{font-size:16px;line-height:2;color:#d3ccc1}
+.reader-body h2{font:400 clamp(25px,4vw,36px)/1.15 var(--serif);color:#f2e8d8;margin:44px 0 16px}
+.reader-body p{margin:0 0 23px}
+.reader-body blockquote{margin:32px 0;padding:8px 0 8px 22px;border-left:2px solid var(--gold);font:italic 22px/1.6 var(--serif);color:#d9c49f}
+.reader-note{margin-top:50px;padding:20px;border:1px solid rgba(198,166,107,.25);color:#aaa39a;font-size:11px;line-height:1.8}
+@media(max-width:800px){.dash-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-columns{grid-template-columns:1fr}.article-grid{grid-template-columns:1fr}.article-card:first-child{grid-column:auto}.article-card{min-height:280px}.editorial-hero:after{right:-5%;top:10%}}
+@media(max-width:640px){.editorial-launch{top:auto;bottom:calc(126px + var(--safe-bottom));left:var(--pad);transform:none}.dashboard-launch{top:auto;bottom:calc(126px + var(--safe-bottom));right:var(--pad);transform:none}.archive-top{align-items:flex-start}.archive-brand{font-size:16px}.archive-actions{justify-content:flex-end}.archive-actions button,.archive-actions a{padding:8px 10px;font-size:10px}.editorial-hero{min-height:370px}.editorial-hero h1{font-size:43px}.editorial-hero p{font-size:12px}.dash-stat{padding:15px;min-height:115px}.dash-stat strong{font-size:32px}.dash-article-row{grid-template-columns:28px minmax(0,1fr) auto;gap:8px}.dash-article-row strong{font-size:14px}.reader-body{font-size:14px;line-height:1.9}.reader-deck{font-size:14px}.reader-top{margin-bottom:34px}}
+@media(max-width:380px){.archive-top{flex-wrap:wrap}.archive-actions{width:100%;justify-content:flex-start}.dash-stats{gap:8px}.dash-stat strong{font-size:28px}.editorial-launch,.dashboard-launch{font-size:9px;padding:9px 10px}}
+
+</style>
+</head>
+<body class="locked">
+<div id="scrolltrack"></div>
+<div id="stage"><div id="world"><div id="orb"></div><h1 id="headline"><span class="inner"><span style="--i:0">I</span> <span style="--i:1">See</span> <span style="--i:2">Through</span> <span style="--i:3">the</span> <span style="--i:4">Wild</span></span></h1></div></div>
+<div class="vig"></div>
+<header class="chrome"><a class="wordmark" href="#" aria-label="The Rony Archives">The Rony<em> Archives</em></a><button id="menuBtn" class="menu-btn" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><span class="menu-label">মেনু</span><span class="bars"><i></i><i></i></span></button></header>
+<section class="bio chrome"><div class="who"><img id="avatar" alt="The Rony Archives"><b>The Rony Archives</b></div><p id="bioText">প্রকৃতি, বন্যপ্রাণী ও পৃথিবীর অসাধারণ মুহূর্তের গল্প—ছবির মাধ্যমে। প্রতিটি ফ্রেমে আছে নতুন কিছু দেখার আমন্ত্রণ।</p></section>
+<div class="colophon chrome">ফিল্ড নোটস · ২০২৬</div>
+<button id="gridBtn" class="gridbtn" aria-label="Toggle grid view"><b></b><b></b><b></b><b></b></button>
+<div class="cue chrome"><s></s><span>ঘোরাতে টেনে ধরুন</span></div>
+<section id="grid" aria-label="Photo archive"><div class="rows" id="rows"></div></section>
+<section id="lit" aria-hidden="true"><div class="scrim" data-close></div><div class="plate" id="plate"><div class="shot"><img id="litImg" alt=""><button class="close" data-close>বন্ধ করুন</button></div><div class="meta"><div><h2 id="litTitle"></h2><div class="where" id="litWhere"></div></div><div class="note" id="litNote"></div></div></div></section>
+<section id="menu"><nav><a href="#" data-grid>ছবির আর্কাইভ</a><a href="#" data-menu-articles>প্রত্নতাত্ত্বিক নিদর্শন</a><a href="#" data-menu-dashboard>ড্যাশবোর্ড</a><a href="#" data-menu-item>ফিল্ড নোটস</a><a href="#" data-menu-item>আমার সম্পর্কে</a><a href="#" data-close-menu>যোগাযোগ</a></nav><div class="addr">The Rony Archives · বাংলাদেশ<br><a href="mailto:miratulrony@gmail.com">miratulrony@gmail.com</a><br><a href="tel:+8801748631806">01748631806</a></div></section>
+<section id="intro"><video id="film" muted playsinline webkit-playsinline autoplay preload="auto" disablepictureinpicture src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260922_195107_ed3f055a-3a13-4a71-b743-e10310454246.mp4"></video><div class="fallback"></div><div class="veil"></div><button class="skip" id="skip">এড়িয়ে যান</button></section>
+<section id="splash"><div class="mark">The Rony<em> Archives</em></div><div class="bar"><s id="bar"></s></div><div class="tag">The Rony Archives · ২০২৬</div></section>
+<button id="adminOpen" class="admin-open" type="button" aria-label="অ্যাডমিন প্যানেল খুলুন">⚙ অ্যাডমিন</button>
+<aside id="adminPanel" class="admin-panel" aria-hidden="true">
+  <div class="admin-head"><div><span class="admin-kicker">THE RONY ARCHIVES</span><h2>আর্কাইভ ম্যানেজার</h2></div><button id="adminClose" class="admin-close" type="button" aria-label="বন্ধ করুন">×</button></div>
+  <p class="admin-warning">এই প্যানেলের পরিবর্তন এই ব্রাউজারেই সংরক্ষিত হবে। সব ভিজিটরের জন্য অনলাইনে পরিবর্তন শেয়ার করতে Supabase-এর মতো ব্যাকএন্ড যুক্ত করতে হবে।</p>
+  <label>আপনার পরিচিতি / Bio<textarea id="adminBio" rows="3" placeholder="আপনার সম্পর্কে লিখুন"></textarea></label>
+  <label>প্রোফাইল ছবি আপলোড<input id="adminAvatar" type="file" accept="image/*"></label>
+  <div class="admin-divider"></div><h3>নতুন ছবি যোগ করুন</h3>
+  <label>ছবি<input id="adminPhoto" type="file" accept="image/*"></label>
+  <label>ছবির শিরোনাম<input id="adminTitle" type="text" placeholder="ছবির নাম"></label>
+  <label>স্থান<input id="adminPlace" type="text" placeholder="স্থান · দেশ"></label>
+  <label>ছবির নোট<textarea id="adminNote" rows="3" placeholder="ছবির গল্প"></textarea></label>
+  <button id="adminAdd" class="admin-primary" type="button">+ ছবি যোগ করুন</button>
+  <div class="admin-divider"></div><h3>ছবি সম্পাদনা / মুছুন</h3><div id="adminList" class="admin-list"></div>
+  <div class="admin-actions"><button id="adminSave" class="admin-primary" type="button">পরিবর্তন সংরক্ষণ</button><button id="adminExport" class="admin-secondary" type="button">ব্যাকআপ ডাউনলোড</button></div>
+  <p id="adminStatus" class="admin-status" role="status"></p>
+</aside>
+
+<button id="editorialLaunch" class="editorial-launch" type="button">⌁ প্রত্নতাত্ত্বিক নিদর্শন</button>
+<button id="dashboardLaunch" class="dashboard-launch" type="button">▦ ড্যাশবোর্ড</button>
+
+<section id="editorial" aria-label="ইতিহাস ও প্রত্নতত্ত্বের আর্কাইভ">
+  <div class="archive-top">
+    <div class="archive-brand">THE RONY <span>ARCHIVES</span></div>
+    <div class="archive-actions">
+      <button type="button" data-return-home>মূল দৃশ্য</button>
+      <button type="button" data-go-dashboard>ড্যাশবোর্ড ↗</button>
+      <a href="mailto:miratulrony@gmail.com">যোগাযোগ</a>
+    </div>
+  </div>
+  <div class="editorial-wrap">
+    <div class="editorial-hero">
+      <div class="editorial-hero-content">
+        <div class="eyebrow">History · Mystery · Knowledge</div>
+        <h1>ধ্বংসাবশেষের ভেতর<br><em>লুকিয়ে থাকা ইতিহাস</em></h1>
+        <p>ইট, পাথর, মাটির স্তর আর হারিয়ে যাওয়া জনপদের চিহ্ন—প্রতিটি নিদর্শন অতীতের একটি দরজা। The Rony Archives-এ আমরা ইতিহাসকে দেখি অনুসন্ধান, প্রত্নতত্ত্ব ও বৈজ্ঞানিক ব্যাখ্যার আলোয়।</p>
+      </div>
+    </div>
+    <div class="editorial-tools"><h2>প্রত্নতাত্ত্বিক নথি</h2><input class="article-search" id="articleSearch" type="search" placeholder="নিদর্শন, স্থান বা বিষয় খুঁজুন…" aria-label="নিবন্ধ খুঁজুন"></div>
+    <div class="category-tabs" id="categoryTabs">
+      <button class="active" data-category="সব" type="button">সব নথি</button>
+      <button data-category="বাংলাদেশ" type="button">বাংলাদেশ</button>
+      <button data-category="প্রাচীন নগর" type="button">প্রাচীন নগর</button>
+      <button data-category="বৌদ্ধ ঐতিহ্য" type="button">বৌদ্ধ ঐতিহ্য</button>
+      <button data-category="প্রত্নতত্ত্ব" type="button">প্রত্নতত্ত্ব</button>
+    </div>
+    <div class="article-grid" id="articleGrid"></div>
+    <div class="archive-footer"><span>THE RONY ARCHIVES · History has stranger stories than fiction.</span><span>ইতিহাস · রহস্য · জ্ঞান<br>লেখাগুলো শিক্ষামূলক; নতুন গবেষণায় ব্যাখ্যা বদলাতে পারে।</span></div>
+  </div>
+</section>
+
+<section id="dashboard" aria-label="আর্কাইভ ড্যাশবোর্ড">
+  <div class="archive-top">
+    <div class="archive-brand">THE RONY <span>ARCHIVES</span> / CONTROL ROOM</div>
+    <div class="archive-actions">
+      <button type="button" data-return-home>মূল দৃশ্য</button>
+      <button type="button" data-go-editorial>নিবন্ধসমূহ ↗</button>
+      <button type="button" data-open-admin>অ্যাডমিন ⚙</button>
+    </div>
+  </div>
+  <div class="dashboard-wrap">
+    <div class="dashboard-hero">
+      <div><div class="eyebrow">ARCHIVE INTELLIGENCE · 2026</div><h1>অনুসন্ধানের<br>কন্ট্রোল রুম।</h1><p>ইতিহাস, প্রত্নতত্ত্ব, হারিয়ে যাওয়া সভ্যতা ও বৈজ্ঞানিক রহস্য—এক জায়গায় সাজানো তোমার ডিজিটাল আর্কাইভ। এখান থেকে নতুন নিবন্ধ খুঁজে পড়ো, সংগ্রহের অবস্থা দেখো এবং কনটেন্ট পরিচালনা করো।</p></div>
+      <div class="live-chip">ARCHIVE SYSTEM READY</div>
+    </div>
+    <div class="dash-stats">
+      <div class="dash-stat"><span>প্রকাশিত নিবন্ধ</span><strong id="dashArticleCount">04</strong><small>ইতিহাস ও প্রত্নতত্ত্ব</small></div>
+      <div class="dash-stat"><span>ফটো আর্কাইভ</span><strong id="dashPhotoCount">21</strong><small>ভিজ্যুয়াল সংগ্রহ</small></div>
+      <div class="dash-stat"><span>বিষয় বিভাগ</span><strong>05</strong><small>অনুসন্ধানের পথ</small></div>
+      <div class="dash-stat"><span>সম্পাদনা মোড</span><strong>LOCAL</strong><small>এই ব্রাউজারে সংরক্ষিত</small></div>
+    </div>
+    <div class="dash-columns">
+      <div class="dash-panel"><h2>সম্প্রতি সাজানো নথি</h2><div id="dashboardArticles"></div><p>নোট: এখানে দেখানো সংখ্যা ওয়েবসাইটের ভেতরের কনটেন্টের হিসাব; এটি ট্রাফিক বা ভিজিটরের সংখ্যা নয়।</p></div>
+      <div class="dash-panel"><h2>আর্কাইভ অবস্থা</h2><p>একটি ভালো আর্কাইভ শুধু তথ্য জমা রাখে না—প্রতিটি বিষয়ের সঙ্গে প্রেক্ষাপট, প্রমাণ এবং প্রশ্নও সংরক্ষণ করে।</p><div class="dash-progress"><span></span></div><small style="color:#8f887f;font-size:10px">কনটেন্ট কাঠামো · প্রাথমিক সংস্করণ</small><div class="dash-shortcuts"><button type="button" data-go-editorial>▤ প্রত্নতাত্ত্বিক নিবন্ধ <span>↗</span></button><button type="button" data-go-gallery>▦ ফটো আর্কাইভ <span>↗</span></button><button type="button" data-open-admin>⚙ আর্কাইভ ম্যানেজার <span>↗</span></button><a href="mailto:miratulrony@gmail.com">✉ ইমেইলে যোগাযোগ <span>↗</span></a><a href="tel:+8801748631806">☎ 01748631806 <span>↗</span></a></div></div>
+    </div>
+    <div class="archive-footer"><span>THE RONY ARCHIVES · Uncover. Explore. Discover.</span><span>Admin edits are local until a secure backend is connected.</span></div>
+  </div>
+</section>
+
+<section id="articleReader" aria-label="নিবন্ধ পাঠক">
+  <div class="archive-top">
+    <div class="archive-brand">THE RONY <span>ARCHIVES</span> / FIELD DOSSIER</div>
+    <div class="archive-actions"><button type="button" data-close-reader>← নিবন্ধ তালিকা</button><button type="button" data-go-dashboard>ড্যাশবোর্ড</button></div>
+  </div>
+  <article class="reader-wrap">
+    <div class="eyebrow" id="readerEyebrow">ARCHAEOLOGY / BANGLADESH</div>
+    <h1 class="reader-title" id="readerTitle"></h1>
+    <p class="reader-deck" id="readerDeck"></p>
+    <div class="reader-meta"><span id="readerPlace"></span><span>গবেষণা-ভিত্তিক পরিচিতি</span><span>THE RONY ARCHIVES</span></div>
+    <div class="reader-cover"></div>
+    <div class="reader-body" id="readerBody"></div>
+    <div class="reader-note">সম্পাদকীয় নোট: এই নিবন্ধটি সাধারণ শিক্ষামূলক পরিচিতি হিসেবে লেখা। নির্দিষ্ট তারিখ, স্তরবিন্যাস বা কোনো স্থাপনার ব্যাখ্যা নিয়ে নতুন প্রত্নতাত্ত্বিক গবেষণায় মত পরিবর্তন হতে পারে। প্রকাশের আগে বিশেষজ্ঞ ও সরকারি প্রত্নতত্ত্ব সূত্র দিয়ে তথ্য যাচাই করা উচিত।</div>
+  </article>
+</section>
+
+<div id="dot"></div>
+<script>
+(() => {
+'use strict';
+const CDN='https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/';
+let shots=[
+['hf_20260922_194349_26ffdbfd-ac5e-49e9-a07d-c06d3f7cb4cb','Before the Dust Settled','South Africa · Limpopo Province','Wildlife photography is rarely about pressing the shutter. Most of the work happens earlier — waiting, staying still, and accepting that nature decides if the frame exists. This encounter lasted less than a minute.'],
+['hf_20260922_194350_5546ea3d-6336-42c7-a59f-06165c5802be','The Long Walk Home','Kenya · Maasai Mara','A matriarch leading her herd across open grass at the end of the day. I stayed low and let them close the distance on their own terms.'],
+['hf_20260922_194349_b4533691-cb49-41d4-b56c-51f0fdcbe250','Something Understood','Botswana · Okavango Delta','He held the look for about four seconds. Long enough to be certain neither of us intended to move first.'],
+['hf_20260922_194349_e588abd3-1bfa-4918-894f-05632cc51ccc','Nine Hours of Nothing','Finland · Lapland','A full day in a hide for a single turn of the head. That ratio is normal and I have stopped resenting it.'],
+['hf_20260922_194350_28d92c80-de66-41cb-911e-b3b44aebe1f5','Borrowed Trust','Scotland · Cairngorms','She had learned the shape of a person and decided it was uninteresting. That indifference is the rarest thing in this work.'],
+['hf_20260922_194349_04e89718-4214-4aff-bac5-490462bbfe2f','Small Weather','Costa Rica · Osa Peninsula','Rain had just stopped. Everything on that branch was the size of a thumbnail and lit like a stage.'],
+['hf_20260922_194417_2c031e22-2fad-4c81-a544-83cd6bba1c33','Against the Weather','Alaska · Chilkat Valley','Shot at a thousandth of a second into a rising storm. The light lasted eleven minutes.'],
+['hf_20260922_194349_a39c3226-7848-4b15-b840-98ad8aec467b','The Pale Edge','India · Bandhavgarh','Almost entirely hidden. I only found the frame because the foliage stopped moving in the wrong place.'],
+['hf_20260922_194417_555e4d90-f35f-4a1a-8c75-def1e8b71988','Perfect Arithmetic','Indonesia · Raja Ampat','Coiled with a precision that looks designed. Nothing about it is — it is just the cheapest way to hold heat.'],
+['hf_20260922_194417_e525a243-03c8-454b-83b4-60f541baf70a','Shallow Water','French Polynesia · Fakarava','Three metres down on a single breath. It passed close enough that I stopped composing and simply held the camera still.'],
+['hf_20260922_194349_ec830e6f-b8e6-4569-8540-ee7f33902c53','Two of Nine','India · Ranthambore','Siblings resting out the afternoon heat. The second one never opened its eyes.'],
+['hf_20260922_194417_35a9af5f-bd07-45a7-bb73-08b47d19d530','Low Ground','Nepal · Chitwan','Flat on the ground at her eye level, which is the only honest angle for an animal that hunts from there.'],
+['hf_20260922_194416_30e307a9-1265-45c3-a1a0-5c6fa5bb9f8d','Everything at Once','Iceland · Southern Coast','Free horses on a black beach at dusk. I panned and accepted whatever the frame gave back.'],
+['hf_20260922_194417_ff5cb9f8-8eed-4bfb-bb08-11256da92eae','White on White','Canada · Ellesmere Island','Snow removes every reference for exposure. The only reliable meter left is the eyes.'],
+['hf_20260922_194418_1d9bff4a-4971-4944-9e49-d72e755ceeb0','Census','Namibia · Etosha','Two of roughly sixteen thousand left. The number is the reason the frame exists.'],
+['hf_20260922_194349_75e53821-0807-4ebc-992d-34bae0ec2ce6','The Whole Field','France · Provence','Four millimetres of animal. At this magnification a breath of wind is an earthquake.'],
+['hf_20260922_194417_5a227847-3796-4438-805d-7e66e9538205','First Season','Germany · Bavarian Forest','Days old and already still enough to disappear. Stillness is the first thing anything here learns.'],
+['hf_20260922_194350_b49aa67e-0401-4029-af4f-f6ac3ee83398','Listening Posture','Tanzania · Serengeti','Ears forward, weight on the back legs. She heard something I never did.'],
+['hf_20260922_194349_89b82779-3a46-4c55-b7c5-f4a0fd955874','A Line of Red','Spain · Fuente de Piedra','Underexposed by two stops until only the shape survived.'],
+['hf_20260922_194416_47e18c62-253a-42e1-97a9-9e5f6a6b8d59','Left Behind','Studio · Reykjavík','Found beneath a roost at first light. The only frame in this archive an animal agreed to in advance.',true],
+['hf_20260922_194417_a455843c-d8db-461c-8ef6-74a325d2472c','The Other Side','Uganda · Kibale Forest','Taken by a colleague between two long waits. Proof, mostly, that someone is holding the camera.']
+];
+// Admin edits are stored in this browser. Shared public edits require a backend such as Supabase.
+const storedState=(()=>{try{return JSON.parse(localStorage.getItem('ronyArchivesState')||'null')}catch(e){return null}})();
+if(storedState && Array.isArray(storedState.shots)) shots=storedState.shots;
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const orb=$('#orb'),world=$('#world'),headline=$('#headline'),film=$('#film'),intro=$('#intro'),splash=$('#splash'),bar=$('#bar'),grid=$('#grid'),rows=$('#rows'),plate=$('#plate');
+let R=200,cw=100,spin=0,tilt=-4,camZ=0,dragX=0,dragY=0,velX=0,velY=0,focused=-1,dragging=false,pointerId=null,startX=0,startY=0,lastX=0,lastY=0,dragged=false,dragTarget=null,gesturePending=false,gridView=false,menuOpen=false,litToken=0,sourceEl=null,raf=0,filmRevealed=false,loaded=0;
+const cardEls=[],gridEls=[],unitVectors=[];
+const coarse=matchMedia('(pointer:coarse)').matches;
+function setProgress(){bar.style.transform=`scaleX(${Math.min(1,loaded/22)})`}
+function thumb(id){return typeof id==='string'&&id.startsWith('data:')?id:CDN+id+'_min.webp'} function full(id){return typeof id==='string'&&id.startsWith('data:')?id:CDN+id+'.png'}
+function probe(url,done,cap){
+ const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{
+  try{if(im.naturalWidth<=cap){done(url);return}const c=document.createElement('canvas'),scale=cap/im.naturalWidth;c.width=cap;c.height=Math.round(im.naturalHeight*scale);const ctx=c.getContext('2d');ctx.drawImage(im,0,0,c.width,c.height);c.toBlob(b=>{if(b)done(URL.createObjectURL(b));else done(url)},'image/webp',.88)}catch(e){done(url)}
+ };im.onerror=()=>done(url);im.src=url;
+}
+function capFor(){return innerWidth<=380?420:innerWidth<=640?520:innerWidth<=900?640:760}
+function makeImage(id,img,callback){probe(thumb(id),url=>{img.src=url;img.onload=()=>{img.classList.add('in');if(callback)callback(url)};if(img.complete)img.classList.add('in');},capFor())}
+shots.forEach((s,i)=>{
+ const card=document.createElement('div');card.className='card'+(s[4]?' tall':'');card.dataset.idx=i;
+ const fig=document.createElement('figure'),im=document.createElement('img');im.alt=s[1];fig.append(im);card.append(fig);orb.append(card);cardEls.push(card);
+ const gf=document.createElement('figure'),gim=document.createElement('img'),cap=document.createElement('figcaption');gim.alt=s[1];cap.textContent=s[1];gf.append(gim,cap);gf.dataset.idx=i;rows.append(gf);gridEls.push(gf);
+ makeImage(s[0],im);probe(thumb(s[0]),url=>{gim.src=url;gim.onload=()=>{};if(gim.complete){}},capFor());
+ const unitY=1-(i/(shots.length-1))*2,rad=Math.sqrt(Math.max(0,1-unitY*unitY)),theta=i*Math.PI*(3-Math.sqrt(5)),x=Math.cos(theta)*rad,z=Math.sin(theta)*rad;
+ unitVectors.push({x,y:unitY,z,lat:Math.asin(unitY)*180/Math.PI,lon:Math.atan2(x,z)*180/Math.PI});
+});
+const avatar=$('#avatar');if(storedState&&storedState.avatar){avatar.src=storedState.avatar}else{probe(thumb(shots[20][0]),url=>avatar.src=url,160)}
+if(storedState&&storedState.bio) $('#bioText').textContent=storedState.bio;
+function layout(force=false){
+ const w=innerWidth,h=innerHeight;const oldW=layout.w||0,oldH=layout.h||0;if(!force&&Math.abs(w-oldW)<20&&Math.abs(h-oldH)<20)return;layout.w=w;layout.h=h;
+ const small=w<=380,phone=w<=640;const hr=small?.38:phone?.42:.46,wr=small?.48:phone?.52:.58,floor=small?108:phone?120:155;
+ R=Math.max(floor,Math.min(480,h*hr,w*wr));cw=Math.round(Math.max(72,R*(small?.44:phone?.46:.47)));
+ document.documentElement.style.setProperty('--persp',`${w<=380?620:w<=640?760:w<=900?920:1150}px`);
+ document.documentElement.style.setProperty('--cw',`${cw}px`);
+ cardEls.forEach((card,i)=>{const v=unitVectors[i];card.style.transform=`translate3d(${v.x*R}px,${-v.y*R}px,${v.z*R}px) rotateY(${v.lon}deg) rotateX(${v.lat}deg)`;card.style.setProperty('--cw',`${cw}px`)});
+}
+function rotateVector(v,yaw,pitch){const a=yaw*Math.PI/180,b=pitch*Math.PI/180;const x1=v.x*Math.cos(a)+v.z*Math.sin(a),z1=-v.x*Math.sin(a)+v.z*Math.cos(a);return{x:x1,y:v.y*Math.cos(b)-z1*Math.sin(b),z:v.y*Math.sin(b)+z1*Math.cos(b)}}
+function frame(){
+ const p=Math.max(0,Math.min(1,scrollY/(innerHeight*.16)));if(!dragging&&focused<0){dragX+=velX;dragY+=velY;velX*=.94;velY*=.94;if(Math.abs(velX)<.002)velX=0;if(Math.abs(velY)<.002)velY=0}
+ dragY=Math.max(-32-tilt,Math.min(32-tilt,dragY));const sx=tilt+dragY,sy=spin+dragX,target=p*Math.min(64,R*.12);camZ+=(target-camZ)*.075;
+ world.style.transform=`translateZ(${camZ}px) rotateY(${sy}deg) rotateX(${sx}deg)`;
+ headline.style.transform=`rotateX(${-sx}deg) rotateY(${-sy}deg) translateZ(${R*.62}px)`;headline.style.opacity=Math.max(0,1-p*.55);
+ const perspective=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--persp'))||1150,near=perspective*.66,shade=1-Math.min(1,p*1.6);
+ cardEls.forEach((card,i)=>{const v=rotateVector(unitVectors[i],sy,sx),zf=v.z,base=.14+.86*Math.pow((zf+1)/2,.85);let dim=shade*(1-base);if(focused>=0)dim=Math.min(1,dim+.78);let fade=1;if((zf*R+camZ)>near)fade=Math.max(0,1-(Math.abs(zf*R+camZ)-near)/190);if(i===focused)fade=0;const op=String(fade),d=String(dim);if(card.style.opacity!==op)card.style.opacity=op;if(card.style.getPropertyValue('--d')!==d)card.style.setProperty('--d',d)});
+ if(scrollY>innerHeight*.16)scrollTo(0,innerHeight*.16);document.body.classList.toggle('deep',p>.04);
+ raf=requestAnimationFrame(frame)
+}
+function revealFilm(){if(filmRevealed)return;filmRevealed=true;intro.classList.add('closing');document.body.classList.remove('locked');document.documentElement.style.overflow='';layout(true);requestAnimationFrame(()=>{layout(true);setTimeout(()=>{layout(true);document.body.classList.add('revealed');intro.classList.add('gone');setTimeout(()=>intro.remove(),700)},1000)});setTimeout(()=>{splash.classList.add('out');setTimeout(()=>splash.remove(),950)},0)}
+function tryPlay(){film.muted=true;film.defaultMuted=true;film.playsInline=true;film.setAttribute('playsinline','');film.setAttribute('webkit-playsinline','');film.playbackRate=2;if(film.currentTime>.05)try{film.currentTime=0}catch(e){}const p=film.play();if(p&&p.catch)p.catch(()=>{});}
+film.addEventListener('playing',()=>{film.playbackRate=2;const remaining=Number.isFinite(film.duration)?Math.max(300,(film.duration-film.currentTime-.45)*500):5000;setTimeout(revealFilm,remaining)});
+film.addEventListener('play',()=>film.playbackRate=2);film.addEventListener('ended',revealFilm);film.addEventListener('error',()=>{intro.classList.add('novideo');setTimeout(revealFilm,1300)});
+$('#skip').addEventListener('click',revealFilm);
+['pointerdown','keydown','touchstart'].forEach(ev=>window.addEventListener(ev,()=>{if(film.paused&&!filmRevealed)tryPlay()},{once:true,passive:true}));
+setTimeout(()=>{loaded=22;setProgress();if(!filmRevealed){if(film.readyState>=2)tryPlay();else{intro.classList.add('novideo');setTimeout(revealFilm,1300)}}},Math.min(9000,Math.max(1150,4000)));
+let count=0;const loadedImages=$$('.card img');loadedImages.forEach(im=>{if(im.complete){count++;loaded++;setProgress()}else{im.addEventListener('load',()=>{loaded++;setProgress()},{once:true});im.addEventListener('error',()=>{loaded++;setProgress()},{once:true})}});
+function openShot(i,from){if(i<0||i>=shots.length)return;focused=i;sourceEl=from||cardEls[i];const s=shots[i],token=++litToken;document.body.classList.add('lit');document.documentElement.style.overflow='hidden';$('#lit').setAttribute('aria-hidden','false');$('#litTitle').textContent=s[1];$('#litWhere').textContent=s[2];$('#litNote').textContent=s[3];const im=$('#litImg');im.alt=s[1];im.src=cardEls[i].querySelector('img').src;
+ const start=sourceEl.getBoundingClientRect(),end=plate.getBoundingClientRect();const dx=start.left+start.width/2-(end.left+end.width/2),dy=start.top+start.height/2-(end.top+end.height/2),scale=Math.max(.04,start.width/end.width);plate.style.transition='none';plate.style.transform=`translate(${dx}px,${dy}px) scale(${scale})`;plate.style.opacity='0';void plate.offsetWidth;plate.style.transition='';plate.style.transform='';plate.style.opacity='';
+ const hi=new Image();hi.onload=()=>{if(token===litToken)im.src=hi.src};hi.src=full(s[0]);}
+function closeShot(){if(focused<0)return;const old=focused;focused=-1;document.body.classList.remove('lit');$('#lit').setAttribute('aria-hidden','true');document.documentElement.style.overflow='';const target=sourceEl&&sourceEl.isConnected?sourceEl:cardEls[old],start=plate.getBoundingClientRect(),end=target.getBoundingClientRect();const dx=end.left+end.width/2-(start.left+start.width/2),dy=end.top+end.height/2-(start.top+start.height/2),scale=Math.max(.04,end.width/start.width);plate.style.transform=`translate(${dx}px,${dy}px) scale(${scale})`;plate.style.opacity='0';setTimeout(()=>{plate.style.transition='none';plate.style.transform='';plate.style.opacity='';void plate.offsetWidth;plate.style.transition=''},640);sourceEl=null}
+cardEls.forEach((c,i)=>c.addEventListener('click',()=>{if(!dragged)openShot(i,c)}));gridEls.forEach((c,i)=>c.addEventListener('click',()=>openShot(i,c)));
+function toggleGrid(force){gridView=force===undefined?!gridView:force;document.body.classList.toggle('gridview',gridView);document.body.classList.toggle('deep',gridView||scrollY>innerHeight*.04);if(gridView)closeMenu()}
+$('#gridBtn').addEventListener('click',()=>toggleGrid());
+function closeMenu(){menuOpen=false;document.body.classList.remove('menuopen');$('#menuBtn').setAttribute('aria-expanded','false');$('#menuBtn').setAttribute('aria-label','Open menu')}
+$('#menuBtn').addEventListener('click',()=>{menuOpen=!menuOpen;document.body.classList.toggle('menuopen',menuOpen);$('#menuBtn').setAttribute('aria-expanded',String(menuOpen));$('#menuBtn').setAttribute('aria-label',menuOpen?'Close menu':'Open menu')});
+$$('[data-grid]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();closeMenu();toggleGrid(true)}));
+$$('[data-menu-item],[data-close-menu]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();closeMenu();if(a.dataset.closeMenu!==undefined){const mail='mailto:studio@ethanvale.photo';window.location.href=mail}}));
+$$('[data-close]').forEach(el=>el.addEventListener('click',closeShot));
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.body.classList.contains('reader-open'))showEditorial();else if(document.body.classList.contains('dashboard-open')||document.body.classList.contains('editorial-open'))returnHome();else if(focused>=0)closeShot();else if(menuOpen)closeMenu();else if(gridView)toggleGrid(false)}});
+let pointerFine=matchMedia('(hover:hover) and (pointer:fine)').matches,dx=0,dy=0,tx=0,ty=0;const dot=$('#dot');
+window.addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;const el=document.elementFromPoint(tx,ty);dot.classList.toggle('wide',!!el&&!!el.closest('.card,a,button,#grid figure'))});
+function cursorFrame(){dx+=(tx-dx)*.2;dy+=(ty-dy)*.2;dot.style.transform=`translate3d(${dx}px,${dy}px,0)`;requestAnimationFrame(cursorFrame)}cursorFrame();
+$('#stage').addEventListener('pointerdown',e=>{if(focused>=0||gridView||e.button!==0&&e.pointerType==='mouse')return;const hit=e.target.closest('.card');dragTarget=hit;pointerId=e.pointerId;startX=lastX=e.clientX;startY=lastY=e.clientY;dragged=false;gesturePending=e.pointerType==='touch';dragging=!gesturePending;if(!gesturePending){try{e.currentTarget.setPointerCapture(e.pointerId)}catch(err){}}});
+$('#stage').addEventListener('pointermove',e=>{if(pointerId!==e.pointerId)return;const dxp=e.clientX-lastX,dyp=e.clientY-lastY,totalX=e.clientX-startX,totalY=e.clientY-startY;if(gesturePending&&Math.hypot(totalX,totalY)>10){if(Math.abs(totalY)>Math.abs(totalX)*1.15){pointerId=null;gesturePending=false;dragging=false;return}gesturePending=false;dragging=true;try{e.currentTarget.setPointerCapture(e.pointerId)}catch(err){}}if(!dragging)return;if(Math.hypot(totalX,totalY)>(coarse?14:6))dragged=true;dragX+=dxp*.13;dragY+=dyp*.13;velX=dxp*.13;velY=dyp*.13;lastX=e.clientX;lastY=e.clientY});
+function endPointer(e){if(pointerId!==e.pointerId)return;const wasDrag=dragged,hit=dragTarget;pointerId=null;dragging=false;gesturePending=false;if(!wasDrag&&hit&&focused<0)openShot(Number(hit.dataset.idx),hit);dragTarget=null;setTimeout(()=>dragged=false,0)}
+$('#stage').addEventListener('pointerup',endPointer);$('#stage').addEventListener('pointercancel',e=>{pointerId=null;dragging=false;gesturePending=false;dragTarget=null});
+window.addEventListener('scroll',()=>{if(scrollY>innerHeight*.16)scrollTo(0,innerHeight*.16)},{passive:true});
+let resizeTimer;window.addEventListener('resize',()=>layout());window.addEventListener('orientationchange',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>layout(true),220)});if(window.visualViewport){visualViewport.addEventListener('resize',()=>layout(true));visualViewport.addEventListener('scroll',()=>layout(true))}
+layout(true);frame();tryPlay();
+// Local archive manager: photo files are resized before being saved to browser storage.
+const adminPanel=$('#adminPanel'),adminStatus=$('#adminStatus');
+function stateNow(){return {shots,avatar:$('#avatar').src.startsWith('data:')?$('#avatar').src:(storedState&&storedState.avatar)||'',bio:$('#bioText').textContent}}
+function saveState(){try{localStorage.setItem('ronyArchivesState',JSON.stringify(stateNow()));adminStatus.textContent='পরিবর্তন এই ব্রাউজারে সংরক্ষিত হয়েছে।';return true}catch(e){adminStatus.textContent='সংরক্ষণ করা যায়নি—ছবির ফাইল বড় হতে পারে। ছোট ছবি ব্যবহার করুন বা ব্যাকআপ ডাউনলোড করুন।';return false}}
+function openAdmin(){adminPanel.classList.add('open');adminPanel.setAttribute('aria-hidden','false');document.body.classList.add('adminopen');$('#adminBio').value=$('#bioText').textContent;renderAdminList()}
+function closeAdmin(){adminPanel.classList.remove('open');adminPanel.setAttribute('aria-hidden','true');document.body.classList.remove('adminopen')}
+$('#adminOpen').addEventListener('click',openAdmin);$('#adminClose').addEventListener('click',closeAdmin);
+function compressFile(file,max=1200){return new Promise((resolve,reject)=>{if(!file||!file.type.startsWith('image/'))return reject(new Error('ছবির ফাইল নির্বাচন করুন'));const reader=new FileReader();reader.onerror=()=>reject(new Error('ফাইল পড়া যায়নি'));reader.onload=()=>{const im=new Image();im.onerror=()=>reject(new Error('ছবি খোলা যায়নি'));im.onload=()=>{const scale=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*scale));c.height=Math.max(1,Math.round(im.naturalHeight*scale));c.getContext('2d').drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.78))};im.src=reader.result};reader.readAsDataURL(file)})}
+$('#adminAvatar').addEventListener('change',async e=>{try{const url=await compressFile(e.target.files[0],500);$('#avatar').src=url;const st=stateNow();st.avatar=url;localStorage.setItem('ronyArchivesState',JSON.stringify(st));adminStatus.textContent='প্রোফাইল ছবি সংরক্ষিত হয়েছে।'}catch(err){adminStatus.textContent=err.message||'ছবি আপলোড করা যায়নি'}});
+$('#adminAdd').addEventListener('click',async()=>{try{const file=$('#adminPhoto').files[0],title=$('#adminTitle').value.trim(),place=$('#adminPlace').value.trim(),note=$('#adminNote').value.trim();if(!file||!title){adminStatus.textContent='ছবি এবং শিরোনাম দিন।';return}const data=await compressFile(file,1200);shots.push([data,title,place||'বাংলাদেশ',note,false]);if(saveState()){location.reload()}}catch(err){adminStatus.textContent=err.message||'ছবি যোগ করা যায়নি'}});
+function renderAdminList(){const list=$('#adminList');list.replaceChildren();if(!shots.length){list.innerHTML='<p class="admin-list-empty">এখনো কোনো ছবি নেই।</p>';return}shots.forEach((s,i)=>{const row=document.createElement('div');row.className='admin-item';const im=document.createElement('img');im.src=thumb(s[0]);im.alt='';const info=document.createElement('div'),title=document.createElement('strong'),place=document.createElement('small');title.textContent=s[1];place.textContent=s[2]||'';info.append(title,place);const actions=document.createElement('div');actions.style.display='flex';actions.style.gap='5px';const edit=document.createElement('button');edit.type='button';edit.textContent='এডিট';edit.addEventListener('click',()=>{const t=prompt('ছবির শিরোনাম',s[1]);if(t===null)return;const pl=prompt('স্থান',s[2]||'');if(pl===null)return;const n=prompt('ছবির নোট',s[3]||'');if(n===null)return;shots[i][1]=t.trim()||s[1];shots[i][2]=pl.trim();shots[i][3]=n.trim();saveState();renderAdminList()});const del=document.createElement('button');del.type='button';del.textContent='মুছুন';del.addEventListener('click',()=>{if(!confirm('এই ছবিটি আর্কাইভ থেকে মুছবেন?'))return;shots.splice(i,1);if(saveState())location.reload()});actions.append(edit,del);row.append(im,info,actions);list.append(row)})}
+$('#adminBio').addEventListener('input',()=>{$('#bioText').textContent=$('#adminBio').value});$('#adminSave').addEventListener('click',()=>{saveState();closeAdmin()});
+$('#adminExport').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(stateNow(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='the-rony-archives-backup.json';a.click();URL.revokeObjectURL(url);adminStatus.textContent='ব্যাকআপ ফাইল ডাউনলোড শুরু হয়েছে।'});
+
+
+// Long-form editorial archive and the visual control-room dashboard.
+const archiveArticles = [
+ {id:'mahasthan',category:'বাংলাদেশ',tags:['বাংলাদেশ','প্রাচীন নগর','প্রত্নতত্ত্ব'],title:'মহাস্থানগড়: প্রাচীন পুণ্ড্রনগরের স্তরে স্তরে ইতিহাস',place:'বগুড়া, বাংলাদেশ',deck:'করতোয়া নদীর তীরের উঁচু ভূমি, প্রাচীরের রেখা আর ছড়িয়ে থাকা প্রত্নবস্তু—মহাস্থানগড় বাংলাদেশের প্রাচীন নগরজীবন বোঝার অন্যতম গুরুত্বপূর্ণ সূত্র।',art:'01',body:`
+ <p>বাংলাদেশের উত্তরাঞ্চলে বগুড়া শহরের কাছে অবস্থিত মহাস্থানগড়কে সাধারণভাবে প্রাচীন পুণ্ড্রনগরের সঙ্গে চিহ্নিত করা হয়। এটি কেবল একটি দুর্গের ধ্বংসাবশেষ নয়; বরং দীর্ঘ সময় ধরে গড়ে ওঠা নগর, প্রশাসন, ধর্মীয় জীবন এবং বাণিজ্যিক যোগাযোগের জটিল ইতিহাসের সাক্ষ্য। প্রত্নতাত্ত্বিক অনুসন্ধানে এখানে প্রাচীরঘেরা নগরকেন্দ্র, বসতি, মুদ্রা, পোড়ামাটির বস্তু এবং বিভিন্ন সময়ের সাংস্কৃতিক স্তরের চিহ্ন পাওয়া গেছে।</p>
+ <h2>একটি নগর কীভাবে অতীতের নথি হয়ে ওঠে?</h2>
+ <p>প্রাচীন নগরের ইতিহাস কেবল রাজাদের নাম বা যুদ্ধের বিবরণ থেকে লেখা যায় না। মাটির নিচে থাকা স্তর, দেয়ালের নির্মাণরীতি, মৃৎপাত্রের ধরন, ধাতব বস্তু এবং বসতির বিন্যাস একসঙ্গে বিশ্লেষণ করে প্রত্নতাত্ত্বিকেরা মানুষের দৈনন্দিন জীবন সম্পর্কে ধারণা তৈরি করেন। কোনো স্তরে পাওয়া বস্তু অন্য স্তরের তুলনায় পুরোনো বা নতুন কি না, তা বোঝা গেলে স্থানের পরিবর্তন, পুনর্নির্মাণ কিংবা ব্যবহারের ধারাবাহিকতা শনাক্ত করা যায়।</p>
+ <p>মহাস্থানগড়ের প্রাচীরঘেরা অংশ এই কারণে বিশেষ তাৎপর্যপূর্ণ। নগর-প্রাচীর শুধু প্রতিরক্ষার কাজেই ব্যবহৃত হতে পারে—এমন নয়; তা প্রশাসনিক কেন্দ্রের সীমানা, বসতির সংগঠন কিংবা ক্ষমতার প্রতীকও হতে পারে। তবে প্রতিটি স্থাপনার নির্দিষ্ট কাজ নির্ধারণ করতে খনন-তথ্য, স্থাপত্যের অবস্থান এবং সংশ্লিষ্ট প্রত্নবস্তুর প্রমাণ একসঙ্গে বিচার করা প্রয়োজন।</p>
+ <h2>নদী, যোগাযোগ ও জনবসতি</h2>
+ <p>প্রাচীন জনপদগুলোর বিকাশে নদী গুরুত্বপূর্ণ ভূমিকা রাখত। নদীপথ মানুষের চলাচল, পণ্য পরিবহন, কৃষিকাজ এবং দূরবর্তী অঞ্চলের সঙ্গে যোগাযোগে সহায়তা করত। করতোয়া নদী ও আশপাশের ভূপ্রকৃতি মহাস্থানগড়ের পরিবেশগত প্রেক্ষাপট বোঝার জন্য গুরুত্বপূর্ণ। তবে কোনো নগরের উত্থানকে একটি মাত্র কারণ দিয়ে ব্যাখ্যা করা যায় না; কৃষি উদ্বৃত্ত, রাজনৈতিক সংগঠন, কারুশিল্প, বাণিজ্য এবং পরিবেশের সম্মিলিত প্রভাব বিবেচনায় নিতে হয়।</p>
+ <blockquote>ধ্বংসাবশেষ কোনো নীরব পাথর নয়—প্রমাণের সঙ্গে প্রশ্ন মিলিয়ে পড়লে সেটি হয়ে ওঠে অতীতের দলিল।</blockquote>
+ <h2>যে প্রশ্নগুলো এখনো জরুরি</h2>
+ <p>প্রাচীন নগরের কোন অংশ কখন ব্যবহৃত হয়েছিল? সময়ের সঙ্গে বসতির সীমানা কীভাবে বদলেছে? মানুষের খাদ্যাভ্যাস, উৎপাদন ও বাণিজ্য সম্পর্কে কী জানা যায়? এসব প্রশ্নের উত্তর একবারে পাওয়া যায় না। নতুন খনন, প্রত্নবস্তুর বৈজ্ঞানিক পরীক্ষা, মাটির নমুনা বিশ্লেষণ এবং পুরোনো নথির পুনর্মূল্যায়ন অতীতের ব্যাখ্যাকে আরও নির্ভুল করতে পারে।</p>
+ <p>মহাস্থানগড়ের গুরুত্ব তাই শুধু তার বয়সে নয়; বরং এটি বাংলাদেশের প্রাচীন নগরসভ্যতা নিয়ে গবেষণার একটি বড় ক্ষেত্র। স্থানটি সংরক্ষণ, প্রত্নতাত্ত্বিক প্রেক্ষাপট অক্ষুণ্ণ রাখা এবং দর্শনার্থীদের কাছে প্রমাণভিত্তিক ব্যাখ্যা পৌঁছে দেওয়া—এই তিনটি বিষয় ভবিষ্যৎ প্রজন্মের জন্য বিশেষ গুরুত্বপূর্ণ।</p>`},
+ {id:'paharpur',category:'বৌদ্ধ ঐতিহ্য',tags:['বাংলাদেশ','বৌদ্ধ ঐতিহ্য','প্রত্নতত্ত্ব'],title:'পাহাড়পুরের সোমপুর মহাবিহার: ইটের স্থাপত্যে জ্ঞানচর্চার স্মৃতি',place:'নওগাঁ, বাংলাদেশ',deck:'বিশাল কেন্দ্রীয় স্থাপনা, চারপাশের কক্ষ এবং পোড়ামাটির অলংকরণ—সোমপুর মহাবিহার দক্ষিণ এশিয়ার বৌদ্ধ স্থাপত্য ও শিক্ষাকেন্দ্রের ইতিহাস বুঝতে সহায়তা করে।',art:'02',body:`
+ <p>নওগাঁ জেলার পাহাড়পুরে অবস্থিত সোমপুর মহাবিহার বাংলাদেশের অন্যতম পরিচিত প্রত্নতাত্ত্বিক নিদর্শন। পাল আমলের সঙ্গে যুক্ত এই বৃহৎ বৌদ্ধ বিহার তার পরিকল্পনা, ইটের নির্মাণকৌশল, কেন্দ্রীয় স্থাপত্য এবং পোড়ামাটির ফলকের জন্য বিশেষভাবে পরিচিত। ইউনেস্কোর বিশ্ব ঐতিহ্য তালিকায় অন্তর্ভুক্ত হওয়ায় এটি বাংলাদেশের প্রত্নঐতিহ্যকে আন্তর্জাতিক পরিসরেও পরিচিত করেছে।</p>
+ <h2>স্থাপত্যের বিন্যাস কী বলে?</h2>
+ <p>সোমপুর মহাবিহারের পরিকল্পনায় একটি বড় চতুষ্কোণ প্রাঙ্গণকে ঘিরে সারিবদ্ধ কক্ষ দেখা যায়। এমন কক্ষগুলো ভিক্ষুদের আবাস, অধ্যয়ন বা দৈনন্দিন কাজের সঙ্গে সম্পর্কিত ছিল বলে ব্যাখ্যা করা হয়। মাঝখানের বিশাল স্থাপত্যটি পুরো কমপ্লেক্সের দৃশ্যমান কেন্দ্র। স্থাপনার নকশা ধর্মীয় আচার, চলাচল, সমাবেশ এবং স্থানের প্রতীকী গুরুত্ব সম্পর্কে প্রশ্ন তোলে। স্থাপত্যের প্রতিটি অংশকে একক অর্থে ব্যাখ্যা না করে খনন-প্রমাণ ও তুলনামূলক গবেষণা দিয়ে বোঝা জরুরি।</p>
+ <p>ইট ছিল এই অঞ্চলের স্থাপত্যে গুরুত্বপূর্ণ উপাদান। পাথরের প্রাপ্যতা সীমিত এমন এলাকায় ইটের ব্যবহার বৃহৎ স্থাপনা নির্মাণের সুযোগ তৈরি করেছিল। দেয়ালের পুরুত্ব, ভিত্তি, নির্মাণস্তর এবং মেরামতের চিহ্ন দেখে বোঝা যায় কোনো স্থাপনা একবারে তৈরি হয়েছিল, নাকি বিভিন্ন পর্যায়ে পরিবর্তিত হয়েছে। সোমপুর মহাবিহারের ক্ষেত্রেও স্থাপত্যের ইতিহাস তার দৃশ্যমান অবয়বের চেয়ে অনেক বেশি জটিল।</p>
+ <h2>শিক্ষা, ধর্ম ও আঞ্চলিক যোগাযোগ</h2>
+ <p>মধ্যযুগীয় বৌদ্ধ বিহারগুলো ধর্মীয় অনুশীলনের পাশাপাশি পাণ্ডিত্য, পাণ্ডুলিপি, বিতর্ক এবং জ্ঞান আদান-প্রদানের কেন্দ্র হিসেবেও কাজ করতে পারত। দক্ষিণ এশিয়ার বিভিন্ন অঞ্চলে বৌদ্ধ প্রতিষ্ঠানগুলোর মধ্যে ভিক্ষু ও পণ্ডিতদের চলাচল ছিল। সোমপুরের বিশাল পরিসর থেকে বোঝা যায়, এটি একটি সংগঠিত প্রতিষ্ঠান ছিল; তবে এখানে কোন বিষয়ে কতটা শিক্ষা দেওয়া হতো, তা নির্দিষ্টভাবে বলতে হলে শিলালিপি, পাণ্ডুলিপি এবং অন্যান্য ঐতিহাসিক উৎসের সহায়তা প্রয়োজন।</p>
+ <h2>পোড়ামাটির ফলক: অলংকরণ না তথ্যভান্ডার?</h2>
+ <p>পাহাড়পুরের পোড়ামাটির ফলকে মানুষ, প্রাণী, উদ্ভিদ এবং নানা নকশার উপস্থাপনা দেখা যায়। এগুলো শিল্পরুচি ও নির্মাণশৈলীর পরিচয় দেয়, আবার সমসাময়িক দৃশ্যমান সংস্কৃতি সম্পর্কে প্রশ্নও উত্থাপন করে। কোনো ফলককে সরাসরি নির্দিষ্ট ঐতিহাসিক ঘটনার ছবি বলে ধরে নেওয়া ঠিক নয়; শিল্পরূপের অর্থ নির্ধারণে সময়কাল, অবস্থান, প্রতীক এবং তুলনামূলক নিদর্শন বিবেচনা করতে হয়।</p>
+ <p>আজ সোমপুর মহাবিহার সংরক্ষণে সবচেয়ে বড় চ্যালেঞ্জ হলো আবহাওয়া, আর্দ্রতা, উদ্ভিদের বৃদ্ধি, দর্শনার্থীর চাপ এবং দীর্ঘমেয়াদি কাঠামোগত ক্ষয়। সংরক্ষণ মানে শুধু ভাঙা অংশ মেরামত নয়—প্রত্নতাত্ত্বিক স্তর ও মূল উপাদানের তথ্য অক্ষুণ্ণ রেখে ভবিষ্যৎ গবেষণার সুযোগ রক্ষা করা।</p>`},
+ {id:'mainamati',category:'বৌদ্ধ ঐতিহ্য',tags:['বাংলাদেশ','বৌদ্ধ ঐতিহ্য','প্রত্নতত্ত্ব'],title:'ময়নামতি: লালমাই পাহাড়ের বুকে হারিয়ে যাওয়া বিহার ও জনপদ',place:'কুমিল্লা, বাংলাদেশ',deck:'টিলা, ইটের ভিত্তি, স্তূপ ও বিহারের ধ্বংসাবশেষ ময়নামতিকে দক্ষিণ-পূর্ব বাংলার প্রাচীন ধর্মীয় ও বসতিগত ইতিহাসের গুরুত্বপূর্ণ ক্ষেত্র করে তুলেছে।',art:'03',body:`
+ <p>কুমিল্লার লালমাই-ময়নামতি অঞ্চলে ছড়িয়ে থাকা প্রত্নস্থলগুলো দক্ষিণ-পূর্ব বাংলার অতীত বোঝার জন্য গুরুত্বপূর্ণ। এখানে বিভিন্ন বৌদ্ধ বিহার, স্তূপ, মন্দিরসদৃশ স্থাপনা, মুদ্রা, ভাস্কর্য এবং অন্যান্য প্রত্নবস্তু আবিষ্কৃত হয়েছে। এগুলো একক কোনো স্থাপনার ইতিহাস নয়; বরং দীর্ঘ সময় ধরে গড়ে ওঠা একাধিক ধর্মীয়, সামাজিক ও রাজনৈতিক কেন্দ্রের বিস্তৃত চিত্র দেয়।</p>
+ <h2>একটি অঞ্চল, অনেক প্রত্নস্থল</h2>
+ <p>ময়নামতি বলতে প্রায়ই একটি নির্দিষ্ট স্মৃতিস্তম্ভ বোঝানো হয়, কিন্তু বাস্তবে এটি বৃহত্তর প্রত্নভূদৃশ্যের নাম। শালবন বিহারসহ বিভিন্ন স্থানে স্থাপনার বিন্যাস, কক্ষের সারি, প্রাঙ্গণ এবং ধর্মীয় স্থাপত্যের চিহ্ন পাওয়া যায়। প্রতিটি স্থানকে আলাদা করে পরীক্ষা করার পাশাপাশি অঞ্চলজুড়ে তাদের অবস্থান, দূরত্ব এবং সম্ভাব্য যোগাযোগের সম্পর্কও বিশ্লেষণ করা জরুরি।</p>
+ <p>প্রত্নতাত্ত্বিকেরা মাটির স্তর ও স্থাপত্যের পরিবর্তন দেখে নির্মাণের পর্যায় নির্ধারণের চেষ্টা করেন। একই স্থানে নতুন ভবন পুরোনো ভিত্তির ওপর তৈরি হতে পারে, অথবা ধর্মীয় ব্যবহারের ধরন সময়ের সঙ্গে পাল্টাতে পারে। ভাঙা ইটের স্তূপকে শুধু ধ্বংসের চিহ্ন হিসেবে দেখলে এই পরিবর্তনের ইতিহাস ধরা পড়ে না; সেগুলো কখনো পুনর্নির্মাণ, সম্প্রসারণ কিংবা স্থান ব্যবহারের নতুন পর্যায়ের প্রমাণও হতে পারে।</p>
+ <h2>বস্তু থেকে মানুষের গল্প</h2>
+ <p>মুদ্রা রাজনৈতিক কর্তৃত্ব ও বিনিময় ব্যবস্থার সূত্র দিতে পারে। সিলমোহর প্রশাসনিক বা প্রাতিষ্ঠানিক পরিচয়ের ইঙ্গিত দিতে পারে। মৃৎপাত্রের ধরন খাদ্য সংরক্ষণ, রান্না ও দৈনন্দিন ব্যবহারের বিষয়ে ধারণা দেয়। ভাস্কর্য ও স্থাপত্যের অলংকরণ ধর্মীয় শিল্পরীতি সম্পর্কে জানায়। তবে কোনো একক বস্তু দিয়ে পুরো সমাজের জীবনযাত্রা ব্যাখ্যা করা যায় না; বস্তুটির আবিষ্কারের স্থান, স্তর এবং অন্যান্য উপাদানের সঙ্গে সম্পর্কও সমান গুরুত্বপূর্ণ।</p>
+ <blockquote>একটি প্রত্নবস্তু উত্তর দেওয়ার পাশাপাশি নতুন প্রশ্নও তৈরি করে—তার ইতিহাস শুরু হয় মাটির নিচে, কিন্তু শেষ হয় গবেষণার টেবিলে।</blockquote>
+ <h2>সংরক্ষণ কেন জরুরি?</h2>
+ <p>প্রত্নস্থল একবার নষ্ট হলে তার অনেক তথ্য চিরতরে হারিয়ে যেতে পারে। ইট খুলে নেওয়া, অনিয়ন্ত্রিত নির্মাণ, পানি জমা, গাছের শিকড় এবং পর্যটন ব্যবস্থাপনার দুর্বলতা স্থাপনার ক্ষতি করতে পারে। দায়িত্বশীল পর্যটনের অর্থ হলো নির্ধারিত পথে চলা, প্রত্নবস্তু স্পর্শ বা সরিয়ে না নেওয়া এবং স্থানটির ঐতিহাসিক পরিবেশকে সম্মান করা।</p>
+ <p>ময়নামতি আমাদের মনে করিয়ে দেয় যে বাংলাদেশের ইতিহাস শুধু কয়েকটি বিখ্যাত স্থাপনায় সীমাবদ্ধ নয়। বহু ছোট-বড় স্থানের সম্মিলিত প্রমাণ দিয়ে অঞ্চলগত ইতিহাস গড়ে ওঠে। তাই প্রত্নস্থলগুলোর মানচিত্র, খনন-প্রতিবেদন এবং সংগ্রহশালার উপকরণ সহজ ভাষায় মানুষের কাছে পৌঁছে দেওয়া জরুরি।</p>`},
+ {id:'wari',category:'প্রাচীন নগর',tags:['বাংলাদেশ','প্রাচীন নগর','প্রত্নতত্ত্ব'],title:'ওয়ারী-বটেশ্বর: প্রাচীন বাণিজ্যপথের সূত্র খুঁজে',place:'নরসিংদী, বাংলাদেশ',deck:'প্রাচীন বসতি, মুদ্রা, পুঁতি এবং অন্যান্য প্রত্নবস্তুর আবিষ্কার এই অঞ্চলকে প্রাচীন বাংলার অর্থনৈতিক ও যোগাযোগ ইতিহাস নিয়ে আলোচনার কেন্দ্রে এনেছে।',art:'04',body:`
+ <p>নরসিংদীর ওয়ারী-বটেশ্বর অঞ্চল বাংলাদেশের প্রাচীন ইতিহাস নিয়ে গবেষণায় বিশেষ আগ্রহের জায়গা। এখানে পাওয়া প্রত্নবস্তু, বসতির চিহ্ন, মুদ্রা, পুঁতি এবং অন্যান্য উপকরণ থেকে প্রাচীন মানুষের উৎপাদন, বিনিময় এবং দূরবর্তী অঞ্চলের সঙ্গে যোগাযোগ নিয়ে নানা প্রশ্ন তৈরি হয়েছে। এই স্থানকে প্রাচীন বাণিজ্যকেন্দ্র হিসেবে বোঝার ক্ষেত্রে প্রমাণের গুরুত্ব অনেক; একই সঙ্গে প্রতিটি ব্যাখ্যার সীমাবদ্ধতাও মাথায় রাখা প্রয়োজন।</p>
+ <h2>বাণিজ্যের প্রমাণ কীভাবে চেনা যায়?</h2>
+ <p>কোনো স্থানে পুঁতি, মুদ্রা বা দূরবর্তী অঞ্চলে তৈরি বস্তু পাওয়া গেলে তা যোগাযোগের সম্ভাবনা দেখাতে পারে। কিন্তু একটি বস্তু দূর থেকে এসেছে বলেই সেখানে বড় আন্তর্জাতিক বন্দর ছিল—এমন সিদ্ধান্তে পৌঁছানো যায় না। বস্তুটির উপাদান, নির্মাণপ্রযুক্তি, আবিষ্কারের স্তর, পরিমাণ এবং আশপাশের অন্যান্য নিদর্শন বিশ্লেষণ করতে হয়। কখনো বস্তু বিনিময়ের মাধ্যমে এসেছে, কখনো কারিগর বা ভ্রমণকারীর সঙ্গে, আবার কখনো পরবর্তী সময়ে স্থানান্তরিত হয়েছে।</p>
+ <p>প্রাচীন বাণিজ্য ছিল পণ্য পরিবহনের পাশাপাশি ধারণা, প্রযুক্তি ও সাংস্কৃতিক রীতির চলাচলও। পুঁতি তৈরির দক্ষতা, ধাতুর ব্যবহার, মৃৎপাত্রের ধরন এবং মুদ্রার প্রচলন বিভিন্ন অঞ্চলের মধ্যে সম্পর্কের সূত্র দিতে পারে। নদী ও স্থলপথের নেটওয়ার্ক কীভাবে কাজ করত, তা বোঝার জন্য প্রত্নতাত্ত্বিক তথ্যের সঙ্গে ভূপ্রকৃতি ও ঐতিহাসিক নথি মিলিয়ে দেখা দরকার।</p>
+ <h2>মাটির নিচে থাকা নগর</h2>
+ <p>প্রাচীন বসতির সীমানা সব সময় স্পষ্ট দেয়াল দিয়ে চিহ্নিত থাকে না। ছড়িয়ে থাকা মৃৎপাত্র, ইটের ভাঙা অংশ, বসতির ঘনত্ব এবং মাটির রাসায়নিক বৈশিষ্ট্যও মানুষের বসবাসের চিহ্ন দিতে পারে। জরিপ, মানচিত্রায়ন এবং নিয়ন্ত্রিত খননের মাধ্যমে গবেষকেরা বসতির বিস্তার সম্পর্কে ধারণা তৈরি করেন। আধুনিক প্রত্নতত্ত্বে ড্রোন-ভিত্তিক মানচিত্র, ভূ-ভৌতিক জরিপ এবং নমুনা বিশ্লেষণ খননের আগে সম্ভাব্য কাঠামো শনাক্ত করতে সাহায্য করতে পারে।</p>
+ <h2>রহস্য নয়, যাচাইযোগ্য প্রশ্ন</h2>
+ <p>ওয়ারী-বটেশ্বর নিয়ে জনপ্রিয় আলোচনায় কখনো কখনো বড় বড় দাবি শোনা যায়। গবেষণার দায়িত্ব হলো আকর্ষণীয় দাবি আর যাচাইযোগ্য প্রমাণকে আলাদা রাখা। কোন তারিখ নির্ধারণ করা হয়েছে, নমুনাটি কোথা থেকে এসেছে, কোন পদ্ধতি ব্যবহৃত হয়েছে এবং অন্য গবেষকেরা ফলাফল পুনরায় যাচাই করতে পেরেছেন কি না—এসব প্রশ্ন জরুরি। সন্দেহপ্রবণ হওয়া মানে ইতিহাস অস্বীকার করা নয়; বরং আরও শক্ত প্রমাণ চাওয়া।</p>
+ <p>ওয়ারী-বটেশ্বরের গুরুত্ব এখানেই: এটি প্রাচীন বাংলার নগরায়ণ, কারুশিল্প এবং আঞ্চলিক যোগাযোগ নিয়ে নতুন গবেষণার দরজা খুলে দেয়। নতুন প্রত্নতাত্ত্বিক তথ্য সামনে এলে পুরোনো ধারণা সংশোধিত হতে পারে। ইতিহাসের সৌন্দর্য হলো, একটি ভালো প্রশ্ন কখনো কখনো বহু নতুন অনুসন্ধানের সূচনা করে।</p>`}
+];
+let activeCategory='সব';
+function renderArticles(){
+ const q=($('#articleSearch')?.value||'').trim().toLocaleLowerCase('bn');
+ const list=archiveArticles.filter(a=>(activeCategory==='সব'||a.tags.includes(activeCategory)||a.category===activeCategory)&&(!q||(a.title+' '+a.place+' '+a.deck+' '+a.tags.join(' ')).toLocaleLowerCase('bn').includes(q)));
+ const target=$('#articleGrid');target.replaceChildren();
+ if(!list.length){target.innerHTML='<p style="color:#aaa39a;padding:30px">এই অনুসন্ধানে কোনো নিবন্ধ পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজে দেখুন।</p>';return}
+ list.forEach(a=>{const b=document.createElement('button');b.type='button';b.className='article-card';b.innerHTML=`<span class="article-number">${a.art} / DOSSIER</span><span class="article-tag">${a.category} · ${a.place}</span><h3>${a.title}</h3><p>${a.deck}</p><span class="read-link">নিবন্ধটি পড়ুন ↗</span>`;b.addEventListener('click',()=>openArticle(a.id));target.append(b)});
+ $('#dashArticleCount').textContent=String(archiveArticles.length).padStart(2,'0');
+}
+function openArticle(id){
+ const a=archiveArticles.find(x=>x.id===id);if(!a)return;
+ $('#readerEyebrow').textContent='ARCHAEOLOGY / '+a.category.toUpperCase();
+ $('#readerTitle').textContent=a.title;$('#readerDeck').textContent=a.deck;$('#readerPlace').textContent=a.place;$('#readerBody').innerHTML=a.body;
+ document.body.classList.remove('editorial-open','dashboard-open');document.body.classList.add('reader-open');window.scrollTo(0,0);$('#articleReader').scrollTop=0;
+ try{const seen=JSON.parse(localStorage.getItem('ronyArchiveReads')||'{}');seen[id]=(seen[id]||0)+1;localStorage.setItem('ronyArchiveReads',JSON.stringify(seen))}catch(e){}
+}
+function showEditorial(){document.body.classList.remove('dashboard-open','reader-open','gridview','menuopen');document.body.classList.add('editorial-open');$('#menu').style.pointerEvents='none';closeMenu();$('#editorial').scrollTop=0;renderArticles()}
+function showDashboard(){document.body.classList.remove('editorial-open','reader-open','gridview','menuopen');document.body.classList.add('dashboard-open');closeMenu();renderDashboard();$('#dashboard').scrollTop=0}
+function returnHome(){document.body.classList.remove('editorial-open','dashboard-open','reader-open');$('#menu').style.pointerEvents='';}
+function renderDashboard(){
+ $('#dashPhotoCount').textContent=String(shots.length).padStart(2,'0');
+ $('#dashArticleCount').textContent=String(archiveArticles.length).padStart(2,'0');
+ const box=$('#dashboardArticles');box.replaceChildren();
+ archiveArticles.slice(0,4).forEach((a,i)=>{const row=document.createElement('div');row.className='dash-article-row';row.innerHTML=`<span class="idx">0${i+1}</span><div><strong></strong><small></small></div><button type="button">পড়ুন ↗</button>`;row.querySelector('strong').textContent=a.title;row.querySelector('small').textContent=a.place+' · '+a.category;row.querySelector('button').addEventListener('click',()=>openArticle(a.id));box.append(row)});
+}
+$('#editorialLaunch').addEventListener('click',showEditorial);
+$('#dashboardLaunch').addEventListener('click',showDashboard);
+$('#articleSearch').addEventListener('input',renderArticles);
+$('#categoryTabs').addEventListener('click',e=>{const b=e.target.closest('button[data-category]');if(!b)return;activeCategory=b.dataset.category;$$('#categoryTabs button').forEach(x=>x.classList.toggle('active',x===b));renderArticles()});
+$$('[data-return-home]').forEach(b=>b.addEventListener('click',returnHome));
+$$('[data-go-dashboard]').forEach(b=>b.addEventListener('click',showDashboard));
+$$('[data-go-editorial]').forEach(b=>b.addEventListener('click',showEditorial));
+$$('[data-close-reader]').forEach(b=>b.addEventListener('click',showEditorial));
+$$('[data-go-gallery]').forEach(b=>b.addEventListener('click',()=>{returnHome();toggleGrid(true)}));
+$$('[data-open-admin]').forEach(b=>b.addEventListener('click',()=>{returnHome();openAdmin()}));
+$$('[data-menu-articles]').forEach(b=>b.addEventListener('click',showEditorial));
+$$('[data-menu-dashboard]').forEach(b=>b.addEventListener('click',showDashboard));
+renderArticles();renderDashboard();
+
+})();
+</script>
+</body>
+</html>
